@@ -3,24 +3,34 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 class FullPhoto extends StatefulWidget {
-  final String url;
 
-  FullPhoto({Key key, @required this.url}) : super(key: key);
+  final List<String> imageUrlList;
+  final int initIndex;
+
+  FullPhoto({Key key, @required this.imageUrlList,this.initIndex}) : super(key: key);
   @override
   State createState() => new _FullPhoto();
 }
 
 class _FullPhoto extends State<FullPhoto> {
-  List<String> imageListStrings = ['https://cdn.pixabay.com/photo/2020/04/04/05/48/ornamental-cherry-5000946_1280.jpg',
-  'https://cdn.pixabay.com/photo/2016/11/16/10/27/girl-1828538_1280.jpg',
-  'https://cdn.pixabay.com/photo/2016/01/19/17/48/woman-1149911_1280.jpg'];
-
+  PageController _pageController;
+  List<String> imageListStrings = [];
   int currentIndex;
 
   @override
   void initState() {
-    imageListStrings[0] = widget.url;
-    currentIndex = 0;
+
+    for(String imageUrl in widget.imageUrlList){
+      if(imageUrl != ""){
+        imageListStrings.add(imageUrl);
+      }
+    }
+
+    _pageController = PageController(initialPage: widget.initIndex);
+
+    setState(() {
+      currentIndex = widget.initIndex;
+    });
     super.initState();
   }
 
@@ -67,6 +77,7 @@ class _FullPhoto extends State<FullPhoto> {
                     color: Colors.black,
                   ),
                   onPageChanged: onPageChanged,
+                  pageController: _pageController,
                 ),
                 Container(
                   padding: const EdgeInsets.all(20.0),

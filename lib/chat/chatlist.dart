@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:datingappmain/chat/chatroom.dart';
 import 'package:datingappmain/commons/constData.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,11 @@ class ChatList extends StatefulWidget {
   State<StatefulWidget> createState() => _ChatList();
 }
 
-class _ChatList extends State<ChatList> {
+class _ChatList extends State<ChatList> with AutomaticKeepAliveClientMixin<ChatList>{
+
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -53,10 +58,21 @@ class _ChatList extends State<ChatList> {
         ListTile(
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(15.0),
-            child: Image.network(chat2Image,
-                height: 80,
-                fit: BoxFit.cover,
-                width: 60),
+            child:
+            CachedNetworkImage(
+              imageUrl: chat2Image,
+              placeholder: (context, url) => Container(
+                transform: Matrix4.translationValues(0.0, 0.0, 0.0),
+                child: Container(
+                    width: 60,
+                    height: 80,
+                    child: Center(child: new CircularProgressIndicator())),
+              ),
+              errorWidget: (context, url, error) => new Icon(Icons.error),
+              width: 60,
+              height: 80,
+              fit: BoxFit.cover,
+            ),
           ),
           title: Text('Kim'),
           subtitle: Text('I will go to home now'),

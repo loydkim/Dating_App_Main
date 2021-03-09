@@ -18,6 +18,7 @@ enum GenderEnum { man, woman }
 
 class _EditProfile extends State<EditProfile> {
 
+
   GenderEnum _userGender = GenderEnum.man;
   String _selectDateString = '1996-06-11';
   List<File> _imageList = List<File>.generate(4,(file) => File(''));
@@ -48,48 +49,25 @@ class _EditProfile extends State<EditProfile> {
         ),
       ),
       body: Container(
-        margin: const EdgeInsets.fromLTRB(14,14.0,14,14),
-        padding: const EdgeInsets.only(bottom: 4),
         decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(
-        Radius.circular(25.0)
+          image: DecorationImage(image:NetworkImage('https://i.pinimg.com/564x/40/97/a9/4097a9be2792b98cd3c1ed69088ec42f.jpg'),
+              fit: BoxFit.cover)
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 20.0, // has the effect of softening the shadow
-            spreadRadius: 5.0, // has the effect of extending the shadow
-            offset: Offset(4.0,4.0,),
-            )
-          ],
-        ),
-        child: Column(
-        children: <Widget>[
-          Container(
-            height: size.height - 140,
-            child: SingleChildScrollView(
-              child: Stack(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        _userForm(),
-                        _userPhotos(),
-                        _userIntro()
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                _userForm(),
+                _userPhotos(size),
+                _userIntro()
+              ],
             ),
           ),
-          ]
-        )
+        ),
       )
     );
   }
@@ -101,21 +79,21 @@ class _EditProfile extends State<EditProfile> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(left:18.0),
+            padding: const EdgeInsets.only(left:18.0,top:6.0),
             child: Align(
               alignment: Alignment.topLeft,
               child: Text('Introduce',
-                style: TextStyle(fontSize: 26),),
+                style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Container(
                 width: 380,
-                height: 380,
+                height: 200,
                 child: Card(child:
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(left:16.0,right:16.0,top:8.0,bottom:8.0),
                   child: TextFormField(
                     decoration: InputDecoration(
                         border: InputBorder.none,
@@ -132,18 +110,18 @@ class _EditProfile extends State<EditProfile> {
     );
   }
 
-  Widget _userPhotos() {
+  Widget _userPhotos(Size size) {
     return Padding(
       padding: const EdgeInsets.only(top:28.0,bottom:28.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(left:18.0),
+            padding: const EdgeInsets.only(left:18.0,top: 6.0),
             child: Align(
               alignment: Alignment.topLeft,
               child: Text('Your photos',
-                style: TextStyle(fontSize: 26),),
+                style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
             ),
           ),
           Container(
@@ -155,12 +133,15 @@ class _EditProfile extends State<EditProfile> {
                   child: new GestureDetector(
                     onTap: () {
                     },
-                    child: Container(
-                      width: 140,
-                      height: 140,
-                      child:Card(
-                          child:Image.network(widget.userThumbnail,fit: BoxFit.fill,)
-                      ),),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25.0),
+                      child: Container(
+                        width: size.width * 0.4,
+                        height: size.width * 0.5,
+                        child:Card(
+                            child:Image.network(widget.userThumbnail,fit: BoxFit.fill,)
+                        ),),
+                    ),
                   ),
                 ),
                 Padding(
@@ -168,12 +149,15 @@ class _EditProfile extends State<EditProfile> {
                   child: new GestureDetector(
                     onTap: () {
                     },
-                    child: Container(
-                      width: 140,
-                      height: 140,
-                      child:Card(
-                          child: Image.network('https://cdn.pixabay.com/photo/2016/03/27/17/40/black-and-white-1283231_1280.jpg',fit: BoxFit.fill,)
-                      ),),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25.0),
+                      child: Container(
+                        width: size.width * 0.4,
+                        height: size.width * 0.5,
+                        child:Card(
+                            child: Image.network('https://cdn.pixabay.com/photo/2016/03/27/17/40/black-and-white-1283231_1280.jpg',fit: BoxFit.fill,)
+                        ),),
+                    ),
                   ),
                 ),
               ],
@@ -187,15 +171,18 @@ class _EditProfile extends State<EditProfile> {
                 child: new GestureDetector(
                   onTap: () {
                   },
-                  child: Container(
-                    width: 140,
-                    height: 140,
-                    child:Card(
-                        child: (_imageList[2].path != '')
-                            ? Image.file(_imageList[2],fit: BoxFit.fill,)
-                            : Icon(Icons.add_photo_alternate,
-                            size: 110,color: Colors.grey[700])
-                    ),),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25.0),
+                    child: Container(
+                      width: size.width * 0.4,
+                      height: size.width * 0.5,
+                      child:Card(
+                          child: (_imageList[2].path != '')
+                              ? Image.file(_imageList[2],fit: BoxFit.fill,)
+                              : Icon(Icons.add_photo_alternate,
+                              size: 110,color: Colors.grey[700])
+                      ),),
+                  ),
                 ),
               ),
               Padding(
@@ -203,15 +190,18 @@ class _EditProfile extends State<EditProfile> {
                 child: new GestureDetector(
                   onTap: () {
                   },
-                  child: Container(
-                    width: 140,
-                    height: 140,
-                    child:Card(
-                        child: (_imageList[3].path != '')
-                            ? Image.file(_imageList[3],fit: BoxFit.fill,)
-                            : Icon(Icons.add_photo_alternate,
-                            size: 110,color: Colors.grey[700])
-                    ),),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25.0),
+                    child: Container(
+                      width: size.width * 0.4,
+                      height: size.width * 0.5,
+                      child:Card(
+                          child: (_imageList[3].path != '')
+                              ? Image.file(_imageList[3],fit: BoxFit.fill,)
+                              : Icon(Icons.add_photo_alternate,
+                              size: 110,color: Colors.grey[700])
+                      ),),
+                  ),
                 ),
               ),
             ],
@@ -223,12 +213,12 @@ class _EditProfile extends State<EditProfile> {
 
   Widget _userForm() {
     return Padding(
-      padding: const EdgeInsets.only(left:18.0),
+      padding: const EdgeInsets.only(left:18.0,top: 6.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text('Personal',
-            style: TextStyle(fontSize: 26),),
+          Text('Personal Information',
+            style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
           Padding(
             padding: const EdgeInsets.only(left:8.0,top: 10),
             child: Column(

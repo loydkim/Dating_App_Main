@@ -1,4 +1,5 @@
 import 'package:datingappmain/commons/userProfile.dart';
+import 'package:datingappmain/search/searchmain.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoom extends StatefulWidget {
@@ -81,7 +82,16 @@ class _ChatRoom extends State<ChatRoom> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => UserProfile(widget.userName,widget.userinfor,widget.userIntro,widget.userThumbnail,true)),
+                              builder: (context) => UserProfile(
+                                UserData(
+                                  widget.userName,
+                                  widget.userinfor,
+                                  widget.userIntro,
+                                  [widget.userThumbnail],
+                                  ['Sleep','Movie']
+                                )
+                              )
+                          ),
                         );
                       },
                       child: ClipRRect(

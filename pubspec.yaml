@@ -27,6 +27,8 @@ dependencies:
   flutter_range_slider: ^1.4.0
   font_awesome_flutter: ^8.11.0
   flutter_tindercard: ^0.2.0
+  cached_network_image: ^3.0.0-nullsafety
+  scrolling_page_indicator: ^0.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,13 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:datingappmain/commons/constData.dart';
 import 'package:datingappmain/commons/fullPhoto.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:scrolling_page_indicator/scrolling_page_indicator.dart';
 
 class BottomButtonData{
   IconData iconData;
   Color iconColor;
-
   BottomButtonData(this.iconData, this.iconColor);
 }
 
@@ -27,30 +28,48 @@ class SearchMain extends StatefulWidget {
   State<StatefulWidget> createState() => _SearchMain();
 }
 
-class _SearchMain extends State<SearchMain> with WidgetsBindingObserver{
+class _SearchMain extends State<SearchMain> with WidgetsBindingObserver, AutomaticKeepAliveClientMixin<SearchMain>{
+
+  @override
+  bool get wantKeepAlive => true;
 
   bool _isLike;
   int _currentIndex = 0;
   double _xPosition = 0.0;
+  PageController _pageController;
 
   List<UserData> _dummyUserDataList = [
     UserData('Julia','21 / 5km','Nice to meet you',[
       'https://images.pexels.com/photos/1382731/pexels-photo-1382731.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      'https://i.pinimg.com/originals/50/9e/c6/509ec6d95eabe546113967427e70391b.jpg',
+      'https://images.pexels.com/photos/1372134/pexels-photo-1372134.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      'https://images.pexels.com/photos/1468379/pexels-photo-1468379.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
     ],['Shop','Party','Sleep','Travel']),
     UserData('Lucy','23 / 8km','I wanna meet someone',[
-      'https://images.pexels.com/photos/1308881/pexels-photo-1308881.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      'https://images.pexels.com/photos/1539936/pexels-photo-1539936.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      'https://images.pexels.com/photos/2797147/pexels-photo-2797147.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      'https://images.unsplash.com/photo-1515848797093-effe16ccfabb?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTl8fG5lb24lMjBnaXJsfGVufDB8fDB8&ixlib=rb-1.2.1&w=1000&q=80',
+      'https://www.fabmood.com/inspiration/wp-content/uploads/2020/10/blonde-hair-color-13.jpg'
     ],['Game','Movie','Netflix','Talk']),
     UserData('Amanda','26 / 12km','Hellllooo',[
-      'https://images.pexels.com/photos/1391498/pexels-photo-1391498.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      'https://images.pexels.com/photos/1642228/pexels-photo-1642228.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      'https://images.pexels.com/photos/4723520/pexels-photo-4723520.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      'https://images.pexels.com/photos/247878/pexels-photo-247878.jpeg?cs=srgb&dl=pexels-pixabay-247878.jpg&fm=jpg'
     ],['Sports','Watch','Walk','Sleep']),
+    UserData('Helen','22 / 6km','I am boring',[
+      'https://i.pinimg.com/originals/e8/cc/e4/e8cce4252525b456ffe98dc025362ee8.jpg',
+      'https://i.pinimg.com/236x/b8/e7/c8/b8e7c8b9dac88d97e4df0ce67a4704d9--ph.jpg',
+      'https://www.wallpapertip.com/wmimgs/155-1553432_beautiful-chinese-girl.jpg',
+      'https://www.itl.cat/pngfile/big/77-770860_download-wallpaper-chinese-girl-free.jpg',
+    ],['Movie','Sleep','Travel','Party']),
   ];
 
   List<BottomButtonData> _bottomIconDataList = [
-    BottomButtonData(FontAwesomeIcons.solidFlag,Colors.yellow[800]),
+    BottomButtonData(FontAwesomeIcons.redoAlt,Colors.yellow[800]),
     BottomButtonData(FontAwesomeIcons.times,Colors.redAccent),
-    BottomButtonData(FontAwesomeIcons.hotjar,Colors.indigo),
-    BottomButtonData(FontAwesomeIcons.solidHeart,Colors.green[800]),
-    BottomButtonData(FontAwesomeIcons.vial,Colors.brown[600]),
+    BottomButtonData(FontAwesomeIcons.solidStar,Colors.blue[400]),
+    BottomButtonData(FontAwesomeIcons.solidHeart,Colors.green[400]),
+    BottomButtonData(FontAwesomeIcons.bolt,Colors.purple[400]),
   ];
 
 
@@ -80,28 +99,15 @@ class _SearchMain extends State<SearchMain> with WidgetsBindingObserver{
               minHeight: MediaQuery.of(context).size.height * 0.7,
               cardController: _cardController,
               cardBuilder: (context,index){
-                return Stack(
+                return _dummyUserDataList.length == index ? Text('No user') :
+                Stack(
                   children: <Widget>[
-                    GestureDetector(
-                      child: Container(
-                        height: size.height,
-                        width: size.width-14,
-                        color: Colors.white,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(25.0),
-                          child: Image.network(_dummyUserDataList[index].userImages.first, fit: BoxFit.cover,),
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => FullPhoto(url: user1Image)));
-                      },
+                    PageView(
+                      controller: _pageController = PageController(),
+                      children: _userProfile(size, index),
+                      scrollDirection: Axis.vertical,
                     ),
-                    Positioned(
-                      bottom: 4,
-                      left: 4,
-                      child: _userInformation(_dummyUserDataList[index])
-                    ),
+
                     Positioned(
                       top:54,
                       right:36,
@@ -127,8 +133,6 @@ class _SearchMain extends State<SearchMain> with WidgetsBindingObserver{
                             )
                           ],
                         ),
-
-
                       ) : Container(),
                     ),
                     Positioned(
@@ -198,7 +202,7 @@ class _SearchMain extends State<SearchMain> with WidgetsBindingObserver{
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.fromLTRB(12.0,8,12,8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: _bottomIconDataList.map(_bottomButtonWidget).toList(),
@@ -266,6 +270,67 @@ class _SearchMain extends State<SearchMain> with WidgetsBindingObserver{
     );
   }
 
+  List<Widget> _userProfile(Size size, int index,){
+    List<Widget> _returnWidgetList = [];
+    // String userImage in _dummyUserDataList[index].userImages
+    for(int i=0 ; i < _dummyUserDataList[index].userImages.length ; i++){
+      Widget _userWidget = Stack(
+        children: [
+          GestureDetector(
+            child: Container(
+              height: size.height,
+              width: size.width-14,
+              color: Colors.white,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(25.0),
+                child:
+                CachedNetworkImage(
+                  imageUrl: _dummyUserDataList[index].userImages[i],
+                  placeholder: (context, url) => Container(
+                    transform: Matrix4.translationValues(0.0, 0.0, 0.0),
+                    child: Container(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height*0.77,
+                        child: Center(child: new CircularProgressIndicator())),
+                  ),
+                  errorWidget: (context, url, error) => new Icon(Icons.error),
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height*0.77,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => FullPhoto(imageUrlList: _dummyUserDataList[index].userImages,initIndex: i,)));
+            },
+          ),
+          Positioned(
+              bottom: 4,
+              left: 4,
+              child: _userInformation(_dummyUserDataList[index])
+          ),
+          Positioned(
+            right: 12,
+            top:30,
+            child: ScrollingPageIndicator(
+                dotColor: Colors.white,
+                dotSelectedColor: Colors.deepPurple,
+                dotSize: 6,
+                dotSelectedSize: 10,
+                dotSpacing: 16,
+                controller: _pageController,
+                itemCount: _dummyUserDataList[index].userImages.length,
+                orientation: Axis.vertical
+            ),
+          ),
+        ],
+      );
+      _returnWidgetList.add(_userWidget);
+    }
+    return _returnWidgetList;
+  }
+
   Widget _interestingWidget(String interesting){
     return Padding(
       padding: const EdgeInsets.only(right:8.0,bottom: 4.0),
@@ -287,16 +352,24 @@ class _SearchMain extends State<SearchMain> with WidgetsBindingObserver{
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal:8.0),
         child: new RawMaterialButton(
-          onPressed: () { },
+          onPressed: () {
+            if(data.iconData == FontAwesomeIcons.times){
+              _cardController.triggerLeft();
+            }else if(data.iconData == FontAwesomeIcons.solidHeart){
+              _cardController.triggerRight();
+            }else if(data.iconData == FontAwesomeIcons.solidStar){
+              _cardController.triggerUp();
+            }
+          },
           child: new FaIcon(
             data.iconData,
             color: data.iconColor,
-            size: 30.0,
+            size: (data.iconData == FontAwesomeIcons.times || data.iconData == FontAwesomeIcons.solidHeart) ? 32.0 : 20,
           ),
           shape: new CircleBorder(),
-          elevation: 2.0,
+          elevation: 1.0,
           fillColor: Colors.white,
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(14.0),
         ),
       ),
     );

@@ -1,64 +1,22 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:datingappmain/commons/fullPhoto.dart';
+import 'package:datingappmain/search/searchmain.dart';
 import 'package:datingappmain/setting/editProfile.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'constData.dart';
 
 class UserProfile extends StatefulWidget {
-  UserProfile(this.userName,
-      this.userinfor,
-      this.userIntro,
-      this.userThumbnail,
-      this.isSelected);
+  UserProfile(this.userData);
 
-  String userName;
-  String userinfor;
-  String userIntro;
-  String userThumbnail;
-  bool isSelected;
+  UserData userData;
 
   @override
   State createState() => new _UserProfile();
 }
 
 class _UserProfile extends State<UserProfile> {
-  Widget titleSection() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              '${widget.userName}, 24',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30
-              ),
-            ),
-          ),
-          Text(
-            widget.userinfor,
-            style: TextStyle(
-                color: Colors.grey[500],
-                fontSize: 20
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget textSection() {
-    return Container(
-      padding: const EdgeInsets.only(left:32, right: 32),
-      child: Text(
-        widget.userIntro,
-        softWrap: true,
-        style: TextStyle(fontSize: 16),
-      ),
-    );
-  }
 
   List<Choice> choices = <Choice>[
     const Choice(title: 'Edit', icon: Icons.edit),
@@ -70,26 +28,34 @@ class _UserProfile extends State<UserProfile> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => EditProfile(widget.userName,widget.userIntro,widget.userThumbnail)),
+            builder: (context) => EditProfile(widget.userData.name,widget.userData.intro,widget.userData.userImages.first)),
       );
     }else {
       _showDialog();
     }
   }
 
+  List<BottomButtonData> _bottomIconDataList = [
+    BottomButtonData(FontAwesomeIcons.redoAlt,Colors.yellow[800]),
+    BottomButtonData(FontAwesomeIcons.times,Colors.redAccent),
+    BottomButtonData(FontAwesomeIcons.solidStar,Colors.blue[400]),
+    BottomButtonData(FontAwesomeIcons.solidHeart,Colors.green[400]),
+    BottomButtonData(FontAwesomeIcons.bolt,Colors.purple[400]),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Profile',style: TextStyle(color: Colors.black),),
+        title: Text(widget.userData.name,style: TextStyle(color: Colors.black),),
         backgroundColor: Colors.white,
         centerTitle: true,
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
         ),
         actions: <Widget>[
-          widget.userName == myProfileName ?
+          widget.userData.name == myProfileName ?
           PopupMenuButton<Choice>(
             onSelected: _select,
             itemBuilder: (BuildContext context) {
@@ -108,121 +74,165 @@ class _UserProfile extends State<UserProfile> {
           ) : Container(),
         ],
       ),
-      body: Container(
-        margin: const EdgeInsets.fromLTRB(14,14.0,14,14),
-        padding: const EdgeInsets.only(bottom: 4),
-        decoration: BoxDecoration(
-          color: Colors.white,
-//        border: Border.all(color: Colors.grey[400]),
-          borderRadius: BorderRadius.all(
-              Radius.circular(25.0)
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 20.0, // has the effect of softening the shadow
-              spreadRadius: 5.0, // has the effect of extending the shadow
-              offset: Offset(
-                4.0, // horizontal, move right 10
-                4.0, // vertical, move down 10
-              ),
-            )
-          ],
-        ),
+      body: Padding(
+        padding: const EdgeInsets.only(top:8.0),
         child: Column(
-          children: <Widget>[
-            Container(
-              height: widget.userName == myProfileName || widget.isSelected == true  ? size.height - 140 : size.height - 210,
-              child: SingleChildScrollView(
-                child: Stack(
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        GestureDetector(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(25.0),
-                            child: Image.network(widget.userThumbnail,
-                              height: size.height - 360,
-                              fit: BoxFit.cover,
-                              width: size.width,),
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  GestureDetector(
+                    child: Container(
+                      height: size.height,
+                      width: size.width-14,
+                      color: Colors.white,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(25.0),
+                        child:
+                        CachedNetworkImage(
+                          imageUrl: widget.userData.userImages.first,
+                          placeholder: (context, url) => Container(
+                            transform: Matrix4.translationValues(0.0, 0.0, 0.0),
+                            child: Container(
+                                width: double.infinity,
+                                height: MediaQuery.of(context).size.height*0.77,
+                                child: Center(child: new CircularProgressIndicator())),
                           ),
-                          onTap: () {
-                            Navigator.push(
-                                context, MaterialPageRoute(builder: (context) => FullPhoto(url: widget.userThumbnail)));
-                          },
+                          errorWidget: (context, url, error) => new Icon(Icons.error),
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height*0.77,
+                          fit: BoxFit.cover,
                         ),
-
-                        Text('\n\n\n\n'),
-                        textSection(),
-                      ],
+                      ),
                     ),
-                    Positioned(
-                        top: size.height - 420,
-                        left: size.width / 2 - (size.width / 2) + size.width / 10,
-                        child: Container(
-                          height: 110,
-                          width: size.width - 100,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
-                              color: Colors.white,//Color(0xff0F0F0F),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.3),
-                                )
-                              ]
-                          ),
-                          child: titleSection(),
-//                        Center(
-//                          child: titleSection(),
-//                        ),
-                        )
-                    ),
-                  ],
-                ),
+                    onTap: () {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => FullPhoto(imageUrlList: widget.userData.userImages,initIndex: 0,)));
+                    },
+                  ),
+                  Positioned(
+                    bottom: 4,
+                    left: 4,
+                    child: _userInformation(widget.userData)
+                  ),
+                ],
               ),
             ),
-            widget.userName == myProfileName || widget.isSelected == true ? Container()
-                : Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  child: new RawMaterialButton(
-                    onPressed: () { },
-                    child: new Icon(
-                      Icons.clear,
-                      color: Colors.black54,
-                      size: 44.0,
-                    ),
-                    shape: new CircleBorder(),
-                    elevation: 2.0,
-                    fillColor: Colors.white,
-                    padding: const EdgeInsets.all(15.0),
-                  ),
-                  margin: EdgeInsets.only(left: 2,right: 2, bottom: 4),
-                ),
-                Container(
-                  child: new RawMaterialButton(
-                    onPressed: () { },
-                    child: new Icon(
-                      Icons.sentiment_satisfied,
-                      color: Colors.white,
-                      size: 44.0,
-                    ),
-                    shape: new CircleBorder(),
-                    elevation: 2.0,
-                    fillColor: Colors.redAccent,
-                    padding: const EdgeInsets.all(15.0),
-                  ),
-                  margin: EdgeInsets.only(left: 2,right: 2, bottom: 4),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12.0,8,12,8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: _bottomIconDataList.map(_bottomButtonWidget).toList(),
+              ),
             )
           ],
         ),
       )
+    );
+  }
+
+
+
+  Widget _userInformation(UserData userData) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.only(bottom: 2),
+                child: Text(
+                  userData.name,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 36,
+                      shadows: [ Shadow(blurRadius: 1.0,color: Colors.black,offset: Offset(0.6,0.6))]
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left:8.0),
+                child: Text(
+                  userData.information,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26,
+                      shadows: [ Shadow(blurRadius: 1.0,color: Colors.black,offset: Offset(0.6,0.6))]
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              userData.intro,
+              softWrap: true,
+              style: TextStyle(
+                fontSize: 22,
+                color: Colors.white,
+                shadows: [ Shadow(blurRadius: 1.0,color: Colors.black,offset: Offset(0.6,0.6))]
+              ),
+            ),
+          ),
+          Wrap(
+            children: userData.interesting.map(_interestingWidget).toList(),
+          ),
+          // _interestingWidget('Shop')
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _userProfile(Size size, int index,){
+    List<Widget> _returnWidgetList = [];
+    // String userImage in _dummyUserDataList[index].userImages
+    // for(int i=0 ; i < widget.userData.userImages.length ; i++){
+    //   Widget _userWidget =
+    //   _returnWidgetList.add(_userWidget);
+    // }
+    return _returnWidgetList;
+  }
+
+  Widget _interestingWidget(String interesting){
+    return Padding(
+      padding: const EdgeInsets.only(right:8.0,bottom: 4.0),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.grey[700]
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(6,4,6,4),
+          child: Text(interesting,style: TextStyle(color: Colors.white),),
+        ),
+      ),
+    );
+  }
+
+  Widget _bottomButtonWidget(BottomButtonData data){
+    return Flexible(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal:8.0),
+        child: new RawMaterialButton(
+          onPressed: () { },
+          child: new FaIcon(
+            data.iconData,
+            color: data.iconColor,
+            size: (data.iconData == FontAwesomeIcons.times || data.iconData == FontAwesomeIcons.solidHeart) ? 32.0 : 20,
+          ),
+          shape: new CircleBorder(),
+          elevation: 1.0,
+          fillColor: Colors.white,
+          padding: const EdgeInsets.all(14.0),
+        ),
+      ),
     );
   }
 

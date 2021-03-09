@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:datingappmain/commons/constData.dart';
 import 'package:datingappmain/commons/userProfile.dart';
+import 'package:datingappmain/search/searchmain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_range_slider/flutter_range_slider.dart' as frs;
 
@@ -8,7 +10,11 @@ class SettingMain extends StatefulWidget {
   State<StatefulWidget> createState() => _SettingMain();
 }
 
-class _SettingMain extends State<SettingMain> {
+class _SettingMain extends State<SettingMain>  with AutomaticKeepAliveClientMixin<SettingMain>{
+
+  @override
+  bool get wantKeepAlive => true;
+
   double _animatedHeight = 0;
   bool _manValue = false;
   bool _womanValue = true;
@@ -27,17 +33,36 @@ class _SettingMain extends State<SettingMain> {
             child: ListTile(
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(15.0),
-                child: Image.network(myProfileImage,
-                    height: 80,
-                    fit: BoxFit.cover,
-                    width: 60),
+                child:
+                CachedNetworkImage(
+                  imageUrl: myProfileImage,
+                  placeholder: (context, url) => Container(
+                    transform: Matrix4.translationValues(0.0, 0.0, 0.0),
+                    child: Container(
+                        width: 60,
+                        height: 80,
+                        child: Center(child: new CircularProgressIndicator())),
+                  ),
+                  errorWidget: (context, url, error) => new Icon(Icons.error),
+                  width: 60,
+                  height: 80,
+                  fit: BoxFit.cover,
+                ),
               ),
               title: Text('James',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
               onTap: () {
-                Navigator.push(
-                  context,
+                Navigator.push(context,
                   MaterialPageRoute(
-                      builder: (context) => UserProfile(myProfileName,'Male','I legitimately like romantic comedies. I grew up with three sisters and too man females and aunts. I was outnumbered. Plus, they have great dialogue and plot structure. ',myProfileImage,true)),
+                  builder: (context) => UserProfile(
+                    UserData(
+                        myProfileName,
+                        '22',
+                        'I legitimately like romantic comedies.',
+                        [myProfileImage],
+                        ['Sports','Movie','Netflix']
+                      )
+                    )
+                  ),
                 );
               },
             ),
