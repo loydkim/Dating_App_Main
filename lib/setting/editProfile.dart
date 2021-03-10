@@ -17,8 +17,6 @@ class EditProfile extends StatefulWidget {
 enum GenderEnum { man, woman }
 
 class _EditProfile extends State<EditProfile> {
-
-
   GenderEnum _userGender = GenderEnum.man;
   String _selectDateString = '1996-06-11';
   List<File> _imageList = List<File>.generate(4,(file) => File(''));

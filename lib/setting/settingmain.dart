@@ -39,9 +39,9 @@ class _SettingMain extends State<SettingMain>  with AutomaticKeepAliveClientMixi
                   placeholder: (context, url) => Container(
                     transform: Matrix4.translationValues(0.0, 0.0, 0.0),
                     child: Container(
-                        width: 60,
-                        height: 80,
-                        child: Center(child: new CircularProgressIndicator())),
+                      width: 60,
+                      height: 80,
+                      child: Center(child: new CircularProgressIndicator())),
                   ),
                   errorWidget: (context, url, error) => new Icon(Icons.error),
                   width: 60,
@@ -60,7 +60,8 @@ class _SettingMain extends State<SettingMain>  with AutomaticKeepAliveClientMixi
                         'I legitimately like romantic comedies.',
                         [myProfileImage],
                         ['Sports','Movie','Netflix']
-                      )
+                      ),
+                      ParentClassType.EditProfile
                     )
                   ),
                 );
@@ -154,8 +155,7 @@ class _SettingMain extends State<SettingMain>  with AutomaticKeepAliveClientMixi
                             });
                           },
                           onChangeEnd: (double newLowerValue, double newUpperValue) {
-                            print(
-                                'Ended with values: $newLowerValue and $newUpperValue');
+                            print('Ended with values: $newLowerValue and $newUpperValue');
                           },
                         ),
                       ),
@@ -200,14 +200,14 @@ class _SettingMain extends State<SettingMain>  with AutomaticKeepAliveClientMixi
           title: new Text("Do you want to log out?"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
+            new MaterialButton(
               child: new Text("No", style: TextStyle(color: Colors.grey),),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            new FlatButton(
-              child: new Text("Yes"),
+            new MaterialButton(
+              child: new Text("Yes",style: TextStyle(color: Colors.blue),),
               onPressed: () {
                 Navigator.of(context).pop();
               },

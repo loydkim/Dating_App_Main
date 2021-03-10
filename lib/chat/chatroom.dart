@@ -1,5 +1,5 @@
+import 'package:datingappmain/commons/constData.dart';
 import 'package:datingappmain/commons/userProfile.dart';
-import 'package:datingappmain/search/searchmain.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoom extends StatefulWidget {
@@ -22,43 +22,48 @@ class _ChatRoom extends State<ChatRoom> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.userName,style: TextStyle(color: Colors.black),),
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-              child: Center(
-                child: ListView(
-                  children: [
-                    _listItemOther(context,
-                        widget.userName,
-                        widget.userThumbnail,
-                        'Hello~~~~~~~~~~~~~~~ What are you doing?',
-                        '11:30pm'),
-                    _listItemOther(context,
-                        widget.userName,
-                        widget.userThumbnail,
-                        'How are you?',
-                        '11:41pm'),
-                    _listItemMine(context,
-                        'Nothing!',
-                        '11:51pm'),
-                    _listItemMine(context,
-                        'Hello HelloHelloHello HelloHelloHello HelloHelloHello HelloHelloHello HelloHelloHello HelloHello',
-                        '11:51pm')
-                  ]
-                ),
-              )
+    return Container(
+      color: Colors.white,
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(widget.userName,style: TextStyle(color: Colors.black),),
+            backgroundColor: Colors.white,
+            centerTitle: true,
+            iconTheme: IconThemeData(
+              color: Colors.black, //change your color here
+            ),
           ),
-          _buildTextComposer()
-        ],
+          body: Column(
+            children: <Widget>[
+              Expanded(
+                  child: Center(
+                    child: ListView(
+                      children: [
+                        _listItemOther(context,
+                            widget.userName,
+                            widget.userThumbnail,
+                            'Hello~~~~~~~~~~~~~~~ What are you doing?',
+                            '11:30pm'),
+                        _listItemOther(context,
+                            widget.userName,
+                            widget.userThumbnail,
+                            'How are you?',
+                            '11:41pm'),
+                        _listItemMine(context,
+                            'Nothing!',
+                            '11:51pm'),
+                        _listItemMine(context,
+                            'Hello HelloHelloHello HelloHelloHello HelloHelloHello HelloHelloHello HelloHelloHello HelloHello',
+                            '11:51pm')
+                      ]
+                    ),
+                  )
+              ),
+              _buildTextComposer()
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -82,15 +87,16 @@ class _ChatRoom extends State<ChatRoom> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => UserProfile(
-                                UserData(
-                                  widget.userName,
-                                  widget.userinfor,
-                                  widget.userIntro,
-                                  [widget.userThumbnail],
-                                  ['Sleep','Movie']
-                                )
-                              )
+                            builder: (context) => UserProfile(
+                              UserData(
+                                widget.userName,
+                                widget.userinfor,
+                                widget.userIntro,
+                                [widget.userThumbnail],
+                                ['Sleep','Movie']
+                              ),
+                                ParentClassType.Chat
+                            )
                           ),
                         );
                       },
@@ -198,7 +204,7 @@ class _ChatRoom extends State<ChatRoom> {
             ),
           ],
         ),
-      ),                                                             //new
+      ),
     );
   }
 
@@ -217,6 +223,4 @@ class _ChatRoom extends State<ChatRoom> {
       );
     }
   }
-
-
 }

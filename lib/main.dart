@@ -8,11 +8,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -23,9 +21,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
+  @override _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
@@ -39,64 +35,60 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
     _tabController.addListener(_handleTabSelection);
   }
 
-  void _handleTabSelection() {
-    setState(() {
-    });
+  void _handleTabSelection() {setState(() {});}
+
+  Tab _tabItem(IconData iconData, int index, Color selectedColor){
+    return Tab(
+      icon: FaIcon(
+        iconData,
+        size: 26,
+        color: _tabController.index == index ? selectedColor : Colors.grey)
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 26.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                TabBar(
-                  controller: _tabController,
-                  indicatorColor: Colors.white,
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.grey,
-                  tabs: [
-                    Tab(icon: FaIcon(FontAwesomeIcons.users,
-                        size: 26,
-                        color: _tabController.index == 0
-                        ? Colors.indigo
-                        : Colors.grey)),
-                    Tab(icon: FaIcon(FontAwesomeIcons.handHoldingHeart,
-                        size: 26,
-                        color: _tabController.index == 1
-                            ? Colors.red
-                            : Colors.grey)),
-                    Tab(icon: FaIcon(FontAwesomeIcons.solidComments,
-                        size: 26,
-                        color: _tabController.index == 2
-                            ? Colors.green
-                            : Colors.grey)),
-                    Tab(icon: FaIcon(FontAwesomeIcons.cog,
-                        size: 26,
-                        color: _tabController.index == 3
-                            ? Colors.deepPurple
-                            : Colors.grey)),
+      child: Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: Scaffold(
+            appBar: AppBar(
+              elevation: 0.0,
+              flexibleSpace: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 26.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    TabBar(
+                      controller: _tabController,
+                      indicatorColor: Colors.white,
+                      labelColor: Colors.black,
+                      unselectedLabelColor: Colors.grey,
+                      tabs: [
+                        _tabItem(FontAwesomeIcons.users,0,Colors.indigo),
+                        _tabItem(FontAwesomeIcons.handHoldingHeart,1,Colors.red),
+                        _tabItem(FontAwesomeIcons.solidComments,2,Colors.green),
+                        _tabItem(FontAwesomeIcons.cog,3,Colors.deepPurple),
+                      ],
+                    ),
                   ],
                 ),
+              ),
+              backgroundColor: Colors.white,
+            ),
+            body: TabBarView(
+              physics: _tabController.index == 0 ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
+              controller: _tabController,
+              children: [
+                SearchMain(),
+                LoungeMain(),
+                ChatList(),
+                SettingMain(),
               ],
             ),
           ),
-          backgroundColor: Colors.white,
-        ),
-        body: TabBarView(
-          physics: _tabController.index == 0 ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
-          controller: _tabController,
-          children: [
-            SearchMain(),
-            LoungeMain(),
-            ChatList(),
-            SettingMain(),
-          ],
         ),
       ),
     );
