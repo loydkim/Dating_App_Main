@@ -4,6 +4,20 @@
 | ------------- | ------------- |
 | <img src="https://github.com/loydkim/Dating_App_Main/blob/main/promo_ios.gif" width="300" height="560">  | <img src="https://github.com/loydkim/Dating_App_Main/blob/main/promo_android_small.gif" width="340" height="560">  |
 
+* Download launched app
+
+iOS: https://apps.apple.com/us/app/zoa/id1511213810
+
+android: https://play.google.com/store/apps/details?id=dating.you.and.me.loyd.app.example.flutter.com.meandyoudatingapp
+
+* Develop Environment.
+
+- Flutter SDK: 2.0.1
+- Dart: 2.12
+- Xcode Version: 12.2
+- Android Studio: 4.1.1
+- OS Version: MacOS Big Sur 11.2.1
+- 
 ## Getting Started
 
 This project is a starting point for a Flutter application.
