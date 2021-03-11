@@ -2,7 +2,7 @@
 
 | iOS Device  | Android Device |
 | ------------- | ------------- |
-| <img src="https://github.com/loydkim/Dating_App_Main/blob/main/promo_ios.gif" width="300" height="560">  | <img src="https://github.com/loydkim/Dating_App_Main/blob/main/promo_android_small.gif" width="340" height="560">  |
+| <img src="https://github.com/loydkim/Dating_App_Main/blob/main/promo_ios.gif" width="300" height="600">  | <img src="https://github.com/loydkim/Dating_App_Main/blob/main/promo_android_small.gif" width="340" height="560">  |
 
 * Download launched app
 
